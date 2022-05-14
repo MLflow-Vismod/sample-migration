@@ -1,0 +1,37 @@
+---
+title: Delta Table Operations
+width: full
+content source: delta-batch.md
+---
+
+import { ApacheSpark, DeltaLake } from "/src/components/Attributions";
+import { SparkSession } from "/src/components/DeltaLakeConcepts";
+
+<DeltaLake /> supports most of the options provided by <ApacheSpark /> DataFrame
+read and write APIs for performing batch reads and writes on tables. For
+many <DeltaLake /> operations on tables, you enable integration
+with <ApacheSpark /> DataSourceV2 and Catalog APIs (since 3.0) by setting
+configurations when you create a new <SparkSession />.
+
+## Create a table
+
+<DeltaLake /> supports creating two types of tables, tables defined in the
+metastore and tables defined by path.
+
+- **`DataFrameWriter` API**: If you want to simultaneously create a table and insert data into it from Spark DataFrames or Datasets, you can use the Spark `DataFrameWriter` ([Scala or Java](https://spark.apache.org/docs/latest/api/scala/org/apache/spark/sql/DataFrameWriter.html) and [Python](https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql.html#input-and-output)).
+
+  ```python
+  # Create table in the metastore using DataFrame's schema and write data to it
+  df.write.format("delta").saveAsTable("default.people10m")
+
+  # Create or replace partitioned table with path using DataFrame's schema and write/overwrite data to it
+  df.write.format("delta").mode("overwrite").save("/tmp/delta/people10m")
+  ```
+
+  ```scala
+  // Create table in the metastore using DataFrame's schema and write data to it
+  df.write.format("delta").saveAsTable("default.people10m")
+
+  // Create table with path using DataFrame's schema and write data to it
+  df.write.format("delta").mode("overwrite").save("/tmp/delta/people10m")
+  ```
